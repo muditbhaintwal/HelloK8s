@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-k8s-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-k8s
+  template:
+    metadata:
+      labels:
+        app: hello-k8s # label of the pod. this matches with the label of the service.yaml
+    spec:
+      containers:
+      - name: hello-k8s
+        image: muditbhaintwal/mudit-repo:v1.0.0
+        ports:
+        - containerPort: 8080
+
+
+
+
+
+
+# The Deployment file (deployment.yaml) and the Service file (service.yaml) are matched through the selector field in the Service file and the labels field in the Deployment file.
+#
+#In the Deployment file, the template has a label app: hello-k8s:
