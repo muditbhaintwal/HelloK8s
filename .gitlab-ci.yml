@@ -1,5 +1,7 @@
+image: openjdk:23
 stages:
   - build
+  - test
   - deploy
 
 
@@ -11,6 +13,12 @@ build:
   artifacts:
     paths:
       - build/jib-image.tar
+
+test:
+  stage: test
+  script:
+    - ./gradlew test
+
 
 deploy:
   stage: deploy
