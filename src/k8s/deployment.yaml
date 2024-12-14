@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: hello-k8s
-        image: muditbhaintwal/mudit-repo:v1.0.0
+      # image: muditbhaintwal/mudit-repo:v1.0.0
+        image: muditbhaintwal/mudit-repo:jib-v1.0.0
         ports:
         - containerPort: 8080
 

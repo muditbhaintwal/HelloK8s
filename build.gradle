@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'com.google.cloud.tools.jib' version "3.4.4"
 }
 
 group = 'com.example'
@@ -26,4 +27,31 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// Note unlike dockerfile jib don't need to have docker installed.
+// it don't copy the build jar to the container.
+// use gradlew build jib to build jar,image and push it to image repo (docker hub)
+
+//  Jib doesn't push the image to your local Docker daemon by default. Instead, it pushes the image directly to the registry (in this case, Docker Hub).
+//
+//To verify that the image has been pushed successfully, you can check your Docker Hub repository online or use the docker pull command to pull the image from the registry:
+jib {
+	from {
+		image = 'openjdk:23-slim'
+	}
+	to {
+		//image = 'localhost:5000/my-image/built-with-jib'
+		image = 'docker.io/muditbhaintwal/mudit-repo'
+		//credHelper = 'osxkeychain'
+		tags = ['jib-v1.0.0']
+	}
+	container {
+		//jvmFlags = ['-Dmy.property=example.value', '-Xms512m', '-Xdebug']
+		mainClass = 'com.example.HelloK8s.HelloK8sApplication'
+		//args = ['some', 'args']
+		//ports = ['1000', '2000-2003/udp']
+		//labels = [key1:'value1', key2:'value2']
+		format = 'OCI'
+	}
 }

@@ -1,39 +1,60 @@
 # Hello k8s
 
-Its a hello to k8s. just to get into concepts of deployments ports services etc.
+It's a hello to k8s. Its an effort to play with k8s concepts of deployments ports services etc.
 
 ## Steps
 
-build project
+* build project
 
-create image
+* create image
 
-push it to docker hub
+* push it to docker hub
 
-deploy it to k8s
+* deploy it to k8s
 
-## notes
+**api to hit  http://localhost:80/v1/time**
+
+**Most frequently used commands**
+
+```bash
+
+gradlew build jib
+
+kubectl get deployments
+kubectl delete deployments hello-k8s-deployment
+kubectl apply -f src/k8s/deployment.yaml
+kubectl get pod -o wide
+
+kubectl get svc
+kubectl apply -f src/k8s/service.yaml
+
+kubectl logs 
+```
+
+
+
+## Notes
 
 
 This exposes the host machine's port 9000 to container's  port 8080.
 
 
-docker run -p 9000:8080 my-image
+`docker run -p 9000:8080 my-image`
 
 http://localhost:9000/v1/time
 
 
-To get conatiner ip
+**To get container ip**
 
-docker ps
+`docker ps
 
-docker inspect -f '{{.NetworkSettings.IPAddress}}' 1fea6306b1ca
+docker inspect -f '{{.NetworkSettings.IPAddress}}' 1fea6306b1ca`
 
 I am not able to access app via conatiner ip.
 
 
 
-pushing an image to repo
+Pushing an image to repo
 ------------------------
 
 To push an image, you first need to create a repository on Docker Hub.
@@ -75,18 +96,23 @@ This order makes sense because the service relies on the deployment being create
 
 ----------------------
 
-# The Deployment file (deployment.yaml) and the Service file (service.yaml) are matched through the selector field in the Service file and the labels field in the Deployment file.
-#
-#In the Deployment file, the template has a label app: hello-k8s:
+**The Deployment file (deployment.yaml) and the Service file (service.yaml) are matched through the selector field in the Service file and the labels field in the Deployment file.**
+
+In the Deployment file, the template has a label app: hello-k8s:
 
 
 
 ----------------------------
-kube ctl commands
+**Imp kubectl commands**
 
 https://github.com/dennyzhang/cheatsheet-kubernetes-A4
 
-Examples:
+
+
+
+
+
+
 ```bash
 
 # Get commands with basic output
@@ -190,7 +216,7 @@ kubectl events --types=Warning
 
 -------------------------------------
 
-debugging pods
+**Debugging pods**
 
 
 To access the app from a browser, you would need to:
@@ -202,7 +228,7 @@ kubectl get svc -o wide
 This will display the external IP address of the service.
 
 2- Open a web browser and navigate to http://<external-ip-address>:80, replacing <external-ip-address> with the actual IP address you obtained in step 1.
-Note that the containerPort in the deployment.yaml file should match with the targetPort in the service.yaml file. 
+Note that the containerPort in the deployment.yaml file should match with the targetPort in the service.yaml file.
 
 in deployment.yaml
 ```bash
@@ -220,7 +246,7 @@ in service yaml
     port: 80 # Service exposes to the "external" world
     targetPort: 8080
 ```
-port and targetPort in the service.yaml file = This means that the service is forwarding traffic from port 80 to port 8080 on the container. 
+**port and targetPort in the service.yaml file = This means that the service is forwarding traffic from port 80 to port 8080 on the container.**
 
 
 
@@ -228,10 +254,10 @@ port and targetPort in the service.yaml file = This means that the service is fo
 
 If you've fixed the port mismatch and the service is still not accessible, here are a few more things to check:
 
-Check the service status: 
+Check the service status:
 Run kubectl get svc to ensure the service is running and has an external IP address.
 
-Check the pod status: 
+Check the pod status:
 Run kubectl get pods to ensure the pod is running and has no errors.
 
 Check the container logs: Run kubectl logs <pod-name> to see if there are any errors or issues with the container.
@@ -244,7 +270,74 @@ If none of these troubleshooting steps help, please provide more details about y
 
 --------------------------
 
+## JIB VS DOCKERFILE
 
+Jib is a Java-based tool that uses the Java runtime to create Docker images, without requiring a Docker installation.
+
+
+**Do I need docker for jib image creation?**
+
+No, you don't need Docker installed on your machine to use Jib for image creation.
+
+Jib is a Java-based tool that uses the Java runtime to create Docker images, without requiring a Docker installation. Jib uses the Java Virtual Machine (JVM) to execute the build process and create the image, so you only need to have Java installed on your machine.
+
+Here are the benefits of not requiring Docker:
+
+* Simplified setup: You don't need to install Docker on your machine, which can be a complex process, especially on Windows or macOS.
+
+* Faster builds: Jib can build images faster than Docker, since it doesn't require the overhead of running a Docker daemon.
+
+* Improved security: By not requiring Docker, Jib reduces the attack surface of your machine, since you don't need to expose the Docker daemon to the network.
+
+
+**Dockerfile**
+
+**Pros**:
+* Well-established and widely used
+* Supports a wide range of features, including multi-stage builds and volume mounts
+* Can be used with a variety of Docker tools and plugins
+
+**Cons**:
+* Can be verbose and difficult to maintain, especially for complex builds
+* Requires manual management of dependencies and build steps
+* Can lead to large and bloated images if not optimized properly
+
+
+**Jib**
+
+**Pros**:
+* Simplifies the build process and reduces verbosity
+* Automatically manages dependencies and build steps
+* Produces smaller and more efficient images
+* Integrates well with popular build tools like Maven and Gradle
+**Cons**:
+* Limited support for advanced Docker features, such as multi-stage builds and volume mounts
+* May require additional configuration for complex builds
+* Still a relatively new tool, with a smaller community and fewer resources
+
+**When to use Dockerfile**
+
+* You need to use advanced Docker features, such as multi-stage builds or volume mounts.
+* You have a complex build process that requires manual management of dependencies and build steps.
+* You prefer a more traditional and well-established build process.
+
+**When to use Jib**
+
+* You want a simpler and more streamlined build process.
+* You're using a popular build tool like Maven or Gradle and want to integrate Jib into your existing workflow.
+* You're looking for a tool that can produce smaller and more efficient images.
+
+Ultimately, the choice between Dockerfile and Jib depends on your specific needs and preferences. If you're already comfortable with Dockerfile and have a complex build process, you may want to stick with it. However, if you're looking for a simpler and more streamlined build process, Jib may be a good choice.
+
+Here's a rough estimate of when to use each tool:
+
+Dockerfile: 70-80% of use cases (complex builds, advanced Docker features)
+Jib: 20-30% of use cases (simple builds, streamlined workflow)
+Keep in mind that this is just a rough estimate, and the best tool for your project will depend on your specific needs and requirements.
+
+
+
+https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin#quickstart
 
 
 ## Contributing
