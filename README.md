@@ -1,6 +1,6 @@
 # Hello k8s
 
-It's a hello to k8s. Its an effort to play with k8s concepts of deployments ports services etc.
+It's a hello to k8s. It's an effort to play with k8s concepts of deployments ports services etc.
 
 ## Steps
 
@@ -50,7 +50,7 @@ http://localhost:9000/v1/time
 
 docker inspect -f '{{.NetworkSettings.IPAddress}}' 1fea6306b1ca`
 
-I am not able to access app via conatiner ip.
+I am not able to access app via container IP.
 
 
 
@@ -235,7 +235,7 @@ in deployment.yaml
         ports:
         - containerPort: 8080
 ```
-containerPort in the deployment.yaml = conatiner is listening to this port
+containerPort in the deployment.yaml = container is listening to this port
 
 
 
@@ -340,6 +340,41 @@ Keep in mind that this is just a rough estimate, and the best tool for your proj
 https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin#quickstart
 
 
+## Setting gitlab in local
+
+use docker way..
+Step 1: Pull the GitLab Docker image, This will download the latest available GitLab Community Edition (CE) image.
+`docker pull gitlab/gitlab-ce:latest`
+
+
+Step 2: Run the GitLab container
+Run the following command to start a new GitLab container:
+
+`docker run -d --name gitlab -p 81:81 -p 443:443 -p 22:22 -v /var/gitlab/data:/var/gitlab/data -v /var/gitlab/logs:/var/log/gitlab -v /var/gitlab/onfig:/etc/gitlab gitlab/gitlab-ce:latest`
+
+Here's what each part of the command does:
+
+* -d runs the container in detached mode (i.e., in the background)
+* --name gitlab gives the container the name "gitlab"
+* -p 80:80 maps port 80 on the host machine to port 80 in the container (for HTTP access)
+* -p 443:443 maps port 443 on the host machine to port 443 in the container (for HTTPS access)
+* -p 22:22 maps port 22 on the host machine to port 22 in the container (for SSH access)
+* -v mounts volumes to persist data between container restarts:
+
+      
+      /var/gitlab/data:/var/gitlab/data for GitLab data
+* 
+      /var/gitlab/logs:/var/log/gitlab for GitLab logs
+* 
+      /var/gitlab/config:/etc/gitlab for GitLab configuration
+
+Step 3: Access your GitLab instance
+
+Once the container is running, you can access your GitLab instance by visiting http://localhost in your web browser. You'll see the GitLab login page.
+
+Initial setup
+
+After logging in for the first time, you'll need to set up your GitLab instance by creating an admin user and setting a password.
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first

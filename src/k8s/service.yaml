@@ -7,7 +7,7 @@ spec:
     app: hello-k8s # label of the pod
   ports:
   - name: http # name of the port
-    port: 80 # Service exposes to the "external" world
+    port: 8080 # Service exposes to the "external" world
     targetPort: 8080 #the "internal" port that the Service will use to communicate with the pods.
   type: LoadBalancer
 

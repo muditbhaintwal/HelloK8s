@@ -1,0 +1,22 @@
+stages:
+  - build
+  - deploy
+
+
+build:
+  stage: build
+  script:
+    - ./gradlew jibBuild
+  artifacts:
+    paths:
+      - build/jib-image.tar
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl port-forward -n default svc/hello-k8s-svc 8080:8080 &
+    - kubectl apply -f src/k8s/deployment.yaml
+    - kubectl apply -f src/k8s/service.yaml
+  environment:
+    name: local
+    url: http://localhost:8080
