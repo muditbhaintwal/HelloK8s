@@ -4,6 +4,9 @@ stages:
   - test
   - deploy
 
+before_script:
+  - apt-get update
+  - apt-get install -y xargs
 
 build:
   stage: build
