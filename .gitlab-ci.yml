@@ -11,8 +11,23 @@ cache:
 build:
   stage: build
   script:
-    - gradle clean build
+    - gradle clean jibBuild
   artifacts:
     paths:
-      - build/libs/*.jar
+      - build/jib-image.tar/*.tar
     expire_in: 1 week
+
+test:
+  stage: test
+  script:
+    - ./gradlew test
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl port-forward -n default svc/hello-k8s-svc 8080:8080 &
+    - kubectl apply -f src/k8s/deployment.yaml
+    - kubectl apply -f src/k8s/service.yaml
+  environment:
+    name: local
+    url: http://localhost:8080
