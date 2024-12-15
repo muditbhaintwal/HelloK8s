@@ -1,4 +1,8 @@
 image: openjdk:23
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
 stages:
   - build
   - test
@@ -7,7 +11,7 @@ stages:
 build:
   stage: build
   script:
-    - gradle jibBuild
+    - ./gradlew jibBuild
   artifacts:
     paths:
       - build/jib-image.tar
@@ -15,7 +19,7 @@ build:
 test:
   stage: test
   script:
-    - gradle test
+    - ./gradlew test
 
 deploy:
   stage: deploy
