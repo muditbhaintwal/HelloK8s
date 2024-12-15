@@ -1,36 +1,18 @@
-image: openjdk:23
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+image: gradle:jdk23-alpine
 
 stages:
   - build
-  - test
-  - deploy
 
-before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-  - sudo chmod +x ./gradlew
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
 
 build:
   stage: build
   script:
-    - ./gradlew jibBuild
+    - gradle clean build
   artifacts:
     paths:
-      - build/jib-image.tar
-
-test:
-  stage: test
-  script:
-    - ./gradlew test
-
-deploy:
-  stage: deploy
-  script:
-    - kubectl port-forward -n default svc/hello-k8s-svc 8080:8080 &
-    - kubectl apply -f src/k8s/deployment.yaml
-    - kubectl apply -f src/k8s/service.yaml
-  environment:
-    name: local
-    url: http://localhost:8080
+      - build/libs/*.jar
+    expire_in: 1 week
