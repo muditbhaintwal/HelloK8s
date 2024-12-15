@@ -14,7 +14,7 @@ before_script:
 build:
   stage: build
   script:
-    - gradlew jibBuild
+    - ./gradlew jibBuild
   artifacts:
     paths:
       - build/jib-image.tar
@@ -22,7 +22,7 @@ build:
 test:
   stage: test
   script:
-    - gradlew test
+    - ./gradlew test
 
 deploy:
   stage: deploy
