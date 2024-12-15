@@ -4,15 +4,10 @@ stages:
   - test
   - deploy
 
-before_script:
-  - apt-get update
-  - apt-get install -y xargs
-
 build:
   stage: build
   script:
-    - chmod +x ./gradlew
-    - ./gradlew jibBuild
+    - gradle jibBuild
   artifacts:
     paths:
       - build/jib-image.tar
@@ -20,8 +15,7 @@ build:
 test:
   stage: test
   script:
-    - ./gradlew test
-
+    - gradle test
 
 deploy:
   stage: deploy
