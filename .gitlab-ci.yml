@@ -1,26 +1,28 @@
 image: gradle:jdk23-alpine
 
-stages:
-  - build
-
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
+before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
 
 build:
   stage: build
-  script:
-    - gradle clean jibBuild
-  artifacts:
+  script: gradle jibBuild --build-cache assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
     paths:
       - build/jib-image.tar/*.tar
-    expire_in: 1 week
+      - .gradle
 
 test:
   stage: test
-  script:
-    - ./gradlew test
+  script: gradle check
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
 
 deploy:
   stage: deploy
