@@ -11,6 +11,7 @@ stages:
 build:
   stage: build
   script:
+    - sh 'chmod +x gradlew'
     - ./gradlew jibBuild
   artifacts:
     paths:
