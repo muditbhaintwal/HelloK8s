@@ -15,7 +15,7 @@ build:
   stage: build
   script:
     - sh 'chmod +x gradlew'
-    - ./gradlew jibBuild
+    - gradlew jibBuild
   artifacts:
     paths:
       - build/jib-image.tar
@@ -23,7 +23,7 @@ build:
 test:
   stage: test
   script:
-    - ./gradlew test
+    - gradlew test
 
 deploy:
   stage: deploy
